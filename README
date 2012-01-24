@@ -1,0 +1,14 @@
+Adds an auto-increment field ('incr') to any Mongoid model by simply including the Module like you would with any other Mongoid-feature:
+
+in some_model.rb
+
+    require 'mongoid/auto_increment'
+    class SomeModel
+      include Mongoid::Document
+      include Mongoid::AutoIncrement
+      ...
+    end
+
+will create a field 'incr' and automatically increment it for new inserts.
+
+Based on this blog post: http://shiflett.org/blog/2010/jul/auto-increment-with-mongodb
