@@ -1,4 +1,4 @@
-Adds an auto-increment field ('incr') to any Mongoid model by simply including the Module like you would with any other Mongoid-feature:
+Adds an auto-increment field '_i' (underscore as internal field, like '_id', and i as commonly used loop-counter and because its short) to any Mongoid model by simply including the Module like you would with any other Mongoid-feature:
 
 in some_model.rb
 
@@ -9,6 +9,6 @@ in some_model.rb
       ...
     end
 
-will create a field 'incr' and automatically increment it for new inserts.
+will create a field '_i' and automatically increment it for new inserts. The field can be accessed like any other field through mongoid (instance._i).
 
 Based on this blog post: http://shiflett.org/blog/2010/jul/auto-increment-with-mongodb

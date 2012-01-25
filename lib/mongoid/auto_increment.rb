@@ -4,15 +4,15 @@ module Mongoid
   extend ActiveSupport::Concern
 
     included do
-      field :incr, :type => Integer
-      set_callback :create, :before, :set_incr
+      field :_i, :type => Integer
+      set_callback :create, :before, :_mongoid_auto_increment_set__i
     end
 
-    def set_incr
-      self.incr = AutoIncrementSequence.next_for_key(self.class.to_s)
+    def _mongoid_auto_increment_set__i
+      self._i = Sequence.next_for_key(self.class.to_s)
     end
 
-    class AutoIncrementSequence
+    class Sequence
       include ::Mongoid::Document
 
       class << self
@@ -22,9 +22,8 @@ module Mongoid
             :query  => {_id: key},
             :update => {:$inc => {:seq => 1}},
             :new    => true,
-            :upsert => true,
-            :fields => [:seq]
-          })[:seq]
+            :upsert => true
+          })['seq']
         end
 
       end
