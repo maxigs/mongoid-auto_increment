@@ -9,7 +9,7 @@ module Mongoid
     end
 
     def _mongoid_auto_increment_set__i
-      self._i = Sequence.next_for_key(self.class.to_s)
+      self._i = Sequence.next_for_key(self.class.collection.name)
     end
 
     class Sequence
