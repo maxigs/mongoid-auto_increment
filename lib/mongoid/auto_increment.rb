@@ -5,11 +5,23 @@ module Mongoid
 
     included do
       field :_i, :type => Integer
+
+      cattr_accessor :auto_increment_scope
+
       set_callback :create, :before, :_mongoid_auto_increment_set__i
     end
 
     def _mongoid_auto_increment_set__i
-      self._i = Sequence.next_for_key(self.class.collection.name)
+      key = if self.class.auto_increment_scope.respond_to?(:call)
+        self.class.auto_increment_scope.call(self)
+      elsif self.class.auto_increment_scope.is_a?(Symbol)
+        context = self.send(self.class.auto_increment_scope)
+        "#{self.class.auto_increment_scope}.#{(context.respond_to?(:id) ? context.id : context).to_s}.#{self.collection.name}"
+      else
+        self.class.auto_increment_scope
+      end
+      
+      self._i = Sequence.next_for_key(key)
     end
 
     class Sequence

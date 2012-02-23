@@ -1,8 +1,9 @@
-Adds an auto-increment field '_i' (underscore as internal field, like '_id', and i as commonly used loop-counter and because its short) to any Mongoid model by simply including the Module like you would with any other Mongoid-feature:
+Adds a automatically filled auto-increment field to any document.
+
+*Usage*
 
 in some_model.rb
 
-    require 'mongoid/auto_increment'
     class SomeModel
       include Mongoid::Document
       include Mongoid::AutoIncrement
@@ -11,4 +12,49 @@ in some_model.rb
 
 will create a field '_i' and automatically increment it for new inserts. The field can be accessed like any other field through mongoid (instance._i).
 
-Based on this blog post: http://shiflett.org/blog/2010/jul/auto-increment-with-mongodb
+It is also possible to set the scope of the auto-increment by hand or semi-automatically:
+
+    class SomeModel
+      include Mongoid::Document
+      include Mongoid::AutoIncrement
+      
+      # By default the scope will be the name of the collection
+      # In this case "some_models"
+      
+      # To a relationship (or anything else that can evaluate #id) by supplying a symbol
+      belongs_to :account
+      self.auto_increment_scope = :account
+      # which will be pre-pended to the collection, for example:
+      # "account.123.some_models"
+      
+      # To a custom string
+      self.auto_increment_scope = 'some_other_models'
+      # will set it to "some_other_models"
+      
+      # Or completely custom by using a Proc
+      self.auto_increment_scope = lambda { |record| "something.#{record.id}" }
+      
+    end
+
+
+*How it works*
+
+The base concept is based on a blog post by Chris Shiflett (http://shiflett.org/blog/2010/jul/auto-increment-with-mongodb) with a bit of Ruby and Mongoid magic added.
+Due to the lack of auto-increment in MongoDB whe have a extra collection to do the book-keeping (keeping the current counter for each collection/scope).
+Under normal Conditions this works fairly well, but might be a bottle-neck in high-performance applications!
+
+
+*TODO*
+
+Write tests :-/
+
+
+*Copyright*
+
+Copyright (c) 2012 benjamin.huettinger@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
