@@ -12,6 +12,13 @@ in some_model.rb
 
 will create a field '_i' and automatically increment it for new inserts. The field can be accessed like any other field through mongoid (instance._i).
 
+
+There is also a Rake-Task to globally reset and regenerate all the auto-increment values:
+
+    rake db:mongoid:regenerate_auto_increments
+
+
+
 It is also possible to set the scope of the auto-increment by hand or semi-automatically:
 
     class SomeModel
