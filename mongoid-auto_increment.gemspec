@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name      = 'mongoid-auto_increment'
-  s.version   = '0.0.2'
+  s.version   = '0.0.3'
   s.platform  = Gem::Platform::RUBY
   s.author    = 'Benjamin Huettinger'
   s.email     = 'benjamin.huettinger@gmail.com'
